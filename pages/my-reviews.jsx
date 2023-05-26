@@ -13,30 +13,33 @@ export default function MyReview({}) {
 	const [feed, setFeed] = useState(null);
 
 	useEffect(() => {
-		async function getFeed() {
-			try {
-				setLoading(true);
-				let { data, error, status } = await supabase
-					.from("reviews")
-					.select(`name, review, user(username), score, image, created_at`)
-					.eq("user", session.user.id)
-					.order("created_at", { ascending: false });
-				if (error && status !== 406) {
-					throw error;
-				}
-				if (data) {
-					setFeed(data);
-				}
-			} catch (error) {
-				alert("Error loading user data!");
-				console.log(error);
-			} finally {
-				setLoading(false);
-			}
+		if (session && session.user) {
+			getFeed();
 		}
-
 		return () => {};
-	}, [supabase, session]);
+	}, [supabase]);
+
+	async function getFeed() {
+		try {
+			setLoading(true);
+			let { data, error, status } = await supabase
+				.from("reviews")
+				.select(`name, review, user(username), score, image, created_at`)
+				.eq("user", session.user.id)
+				.order("created_at", { ascending: false });
+			if (error && status !== 406) {
+				throw error;
+			}
+			if (data) {
+				setFeed(data);
+			}
+		} catch (error) {
+			alert("Error loading user data!");
+			console.log(error);
+		} finally {
+			setLoading(false);
+		}
+	}
 
 	return (
 		<Primary>
