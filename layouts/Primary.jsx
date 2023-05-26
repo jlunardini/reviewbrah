@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 export default function Primary({ children }) {
 	const router = useRouter();
 	return (
-		<div className="flex flex-col w-full bg-gray-100 min-h-[calc(100dvh)]">
+		<div className="flex flex-col w-full bg-gray-100 min-h-[calc(100dvh)] overflow-x-auto">
 			<div className="bg-white shadow-sm h-auto">
 				<div className="max-w-full lg:max-w-[800px] px-4 lg:mx-auto flex flex-row justify-between  gap-4 lg:gap-8 py-4 ">
 					<Link

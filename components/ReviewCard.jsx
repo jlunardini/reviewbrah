@@ -17,7 +17,10 @@ export default function ReviewCard({ review, username, category, showEdit, getFe
 		<div className="flex flex-col col-span-6 ">
 			<div className="flex flex-col md:flex-row gap-6 lg:gap-8 bg-white shadow-sm rounded-lg p-5 peer">
 				{review.image && (
-					<img src={review.image} className="rounded-md w-full md:w-80 h-80 object-cover" />
+					<img
+						src={review.image}
+						className="rounded-md w-full md:w-80 h-80 flex-shrink-0 object-cover"
+					/>
 				)}
 				<div className="flex flex-col justify-center relative w-full">
 					<div className="flex flex-col flex-grow h-full justify-center">

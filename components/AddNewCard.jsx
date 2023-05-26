@@ -12,6 +12,10 @@ export default function AddNewCard({ getFeed }) {
 	const [score, setScore] = useState(0);
 	const [file, setFile] = useState(null);
 	const [category, setCategory] = useState(null);
+	const [showError, setShowError] = useState({
+		show: false,
+		message: null,
+	});
 
 	async function uploadImage(event, session) {
 		try {
@@ -37,6 +41,17 @@ export default function AddNewCard({ getFeed }) {
 	}
 
 	async function addReview() {
+		if (name === null || name === "" || review == "" || review === null) {
+			setShowError({
+				show: true,
+				message: null,
+				fields: {
+					name: name === null || name === "",
+					review: review == "" || review === null,
+				},
+			});
+			return;
+		}
 		try {
 			setLoading(true);
 			const updates = {
@@ -105,14 +120,18 @@ export default function AddNewCard({ getFeed }) {
 				</div>
 				<div className="flex flex-col w-full justify-center">
 					<input
-						className="border border-gray-200 rounded-md px-4 py-2"
+						className={`${
+							showError.show && showError.fields.name ? "border-red-500" : "border-gray-200"
+						} border  rounded-md px-4 py-2 transition-colors`}
 						value={name || ""}
 						onChange={(e) => setName(e.target.value)}
 						placeholder="What are you reviewing?"
 					/>
 					<textarea
 						rows="3"
-						className="border border-gray-200 rounded-md px-4 py-2 mt-3"
+						className={`${
+							showError.show && showError.fields.review ? "border-red-500" : "border-gray-200"
+						} border  rounded-md px-4 py-2 mt-3 transition-colors`}
 						value={review || ""}
 						onChange={(e) => setReview(e.target.value)}
 						placeholder="What'd you think of it?"
@@ -216,6 +235,11 @@ export default function AddNewCard({ getFeed }) {
 					</button>
 				</div>
 			</div>
+			{showError.show && showError.message && (
+				<div className="rounded-lg px-5 py-2 bg-red-500 text-white w-full mt-3">
+					{showError.message}
+				</div>
+			)}
 		</>
 	);
 }
