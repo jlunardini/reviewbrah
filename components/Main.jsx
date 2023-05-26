@@ -76,9 +76,10 @@ export default function Main({ session }) {
 							onChange={(e) => setUsername(e.target.value)}
 						/>
 						<p className="mt-4 text-sm text-gray-500">
-							If you don't set a username, we'll assume you want all your reviews to be private and
-							they will not appear in the feed for others. If you do set a username, we'll assume
-							you're ok with sharing, and all your reviews will be visible to others.
+							If you don&lsquo;t set a username, we&lsquo;ll assume you want all your reviews to be
+							private and they will not appear in the feed for others. If you do set a username,
+							we&lsquo;ll assume you&lsquo;re ok with sharing, and all your reviews will be visible
+							to others.
 						</p>
 					</div>
 					<div className="flex flex-row gap-2">
