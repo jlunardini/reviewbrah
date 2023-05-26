@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useUser, useSupabaseClient } from "@supabase/auth-helpers-react";
+import Link from "next/link";
 
 export default function Main({ session }) {
 	const supabase = useSupabaseClient();
@@ -10,35 +11,33 @@ export default function Main({ session }) {
 	const [avatar_url, setAvatarUrl] = useState(null);
 
 	useEffect(() => {
-		getProfile();
-	}, [session]);
+		async function getProfile() {
+			try {
+				setLoading(true);
 
-	async function getProfile() {
-		try {
-			setLoading(true);
+				let { data, error, status } = await supabase
+					.from("profiles")
+					.select(`username, website, avatar_url`)
+					.eq("id", user.id)
+					.single();
 
-			let { data, error, status } = await supabase
-				.from("profiles")
-				.select(`username, website, avatar_url`)
-				.eq("id", user.id)
-				.single();
+				if (error && status !== 406) {
+					throw error;
+				}
 
-			if (error && status !== 406) {
-				throw error;
+				if (data) {
+					setUsername(data.username);
+					setWebsite(data.website);
+					setAvatarUrl(data.avatar_url);
+				}
+			} catch (error) {
+				alert("Error loading user data!");
+				console.log(error);
+			} finally {
+				setLoading(false);
 			}
-
-			if (data) {
-				setUsername(data.username);
-				setWebsite(data.website);
-				setAvatarUrl(data.avatar_url);
-			}
-		} catch (error) {
-			alert("Error loading user data!");
-			console.log(error);
-		} finally {
-			setLoading(false);
 		}
-	}
+	}, [supabase, user]);
 
 	async function updateProfile({ username, website, avatar_url }) {
 		try {
@@ -65,8 +64,8 @@ export default function Main({ session }) {
 	return (
 		<div className="flex flex-col h-full w-full">
 			<div className="flex flex-row justify-center gap-4 items-center">
-				<a href="/my-reviews">My Reviews</a>
-				<a href="/the-feed">The Feed</a>
+				<Link href="/my-reviews">My Reviews</Link>
+				<Link href="/the-feed">The Feed</Link>
 			</div>
 			<div className="form-widget">
 				<div>

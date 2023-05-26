@@ -10,30 +10,28 @@ export default function TheFeed({}) {
 	const [feed, setFeed] = useState(null);
 
 	useEffect(() => {
-		getFeed();
-		return () => {};
-	}, []);
-
-	async function getFeed() {
-		try {
-			setLoading(true);
-			let { data, error, status } = await supabase
-				.from("reviews")
-				.select(`*, user(username)`)
-				.order("created_at", { ascending: false });
-			if (error && status !== 406) {
-				throw error;
+		async function getFeed() {
+			try {
+				setLoading(true);
+				let { data, error, status } = await supabase
+					.from("reviews")
+					.select(`*, user(username)`)
+					.order("created_at", { ascending: false });
+				if (error && status !== 406) {
+					throw error;
+				}
+				if (data) {
+					setFeed(data);
+				}
+			} catch (error) {
+				alert("Error loading user data!");
+				console.log(error);
+			} finally {
+				setLoading(false);
 			}
-			if (data) {
-				setFeed(data);
-			}
-		} catch (error) {
-			alert("Error loading user data!");
-			console.log(error);
-		} finally {
-			setLoading(false);
 		}
-	}
+		return () => {};
+	}, [supabase]);
 
 	return (
 		<Primary>
@@ -41,7 +39,7 @@ export default function TheFeed({}) {
 				<div className="mt-8 lg:mt-4 flex flex-col w-full mb-16 lg:mb-24">
 					<h1 className="text-2xl lg:text-3xl mb-6 lg:mb-4 lg:mb-6 col-span-6">Recent reviews:</h1>
 					<div className="grid grid-cols-6 gap-12 lg:gap-8 w-full">
-						{feed && feed.map((item) => <ReviewCard review={item} username={true} />)}
+						{feed && feed.map((item) => <ReviewCard key={item.id} review={item} username={true} />)}
 					</div>
 				</div>
 			</div>
