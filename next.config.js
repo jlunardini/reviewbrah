@@ -1,6 +1,17 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
-}
+	reactStrictMode: true,
+};
 
-module.exports = nextConfig
+module.exports = {
+	images: {
+		remotePatterns: [
+			{
+				protocol: "https",
+				hostname: "ixbsnoddnaqcqerlawyk.supabase.co",
+				port: "",
+				pathname: "/storage/v1/object/*",
+			},
+		],
+	},
+};
