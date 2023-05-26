@@ -45,12 +45,14 @@ export default function MyReview({}) {
 	return (
 		<Primary>
 			<div className="px-4 mx-auto lg:w-[800px] flex flex-col">
-				<AddNewCard />
+				<AddNewCard getFeed={getFeed} />
 				<div className="mt-20 lg:mt-24 flex flex-col w-full mb-16 lg:mb-24">
 					<h1 className="text-2xl lg:text-3xl mb-6 col-span-6">Your recent reviews:</h1>
 					<div className="grid grid-cols-6 gap-4 md:gap-6 w-full">
 						{feed &&
-							feed.map((item) => <ReviewCard key={item.id} review={item} username={false} />)}
+							feed.map((item) => (
+								<ReviewCard key={item.id} review={item} username={false} category={false} />
+							))}
 					</div>
 				</div>
 			</div>

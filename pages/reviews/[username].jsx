@@ -53,7 +53,7 @@ export default function User() {
 						Recent reviews by: {""}
 						{router.query.username == undefined ? "" : router.query.username}
 					</h1>
-					<div className="grid grid-cols-6 gap-12 lg:gap-8 w-full">
+					<div className="grid grid-cols-6 gap-16 lg:gap-12 w-full">
 						{feed &&
 							feed.map((item) => <ReviewCard key={item.id} review={item} username={false} />)}
 					</div>

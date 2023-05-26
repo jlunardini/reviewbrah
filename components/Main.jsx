@@ -57,7 +57,7 @@ export default function Main({ session }) {
 
 	return (
 		<Primary>
-			<div className="px-4 mx-auto lg:w-[800px] flex flex-col">
+			<div className="px-4 mx-auto lg:w-[800px] flex flex-col h-full">
 				<h1 className="text-2xl lg:text-3xl mb-6">Profile details</h1>
 				<div className="form-widget p-5 rounded-lg shadow-sm bg-white">
 					<div className="mb-6">

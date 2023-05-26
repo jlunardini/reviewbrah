@@ -1,18 +1,35 @@
 import Link from "next/link";
 
-export default function ReviewCard({ review, username }) {
+export default function ReviewCard({ review, username, category }) {
 	var date = new Date(review.created_at);
 	var parsed = date.getMonth() + 1 + "/" + date.getDate() + "/" + date.getFullYear();
 	return (
 		<div className="flex flex-col col-span-6 ">
-			{username && (
-				<Link
-					href={`/reviews/${review.user.username}`}
-					className="hover:text-gray-500 text-gray-400 text-xl mb-2"
-				>
-					#{review.user.username}
-				</Link>
-			)}
+			<div className="flex flex-row items-center justify-center mb-3 gap-4">
+				{username && (
+					<Link
+						href={`/reviews/${review.user.username}`}
+						className="hover:text-gray-500 text-gray-400 text-md self-start"
+					>
+						#{review.user.username}
+					</Link>
+				)}
+				{category && review.category && review.category === "item" && (
+					<div className="text-md text-amber-500 font-semibold">
+						<span>#Item</span>
+					</div>
+				)}
+				{category && review.category && review.category === "food" && (
+					<div className="text-md text-sky-400 font-semibold">
+						<span>#Food</span>
+					</div>
+				)}
+				{category && review.category && review.category === "experience" && (
+					<div className="text-md text-purple-400 font-semibold">
+						<span>#Experience</span>
+					</div>
+				)}
+			</div>
 			<div className="flex flex-col md:flex-row gap-6 lg:gap-8 bg-white shadow-sm rounded-lg p-5">
 				{review.image && (
 					<img src={review.image} className="rounded-md w-full md:w-80 h-80 object-cover" />

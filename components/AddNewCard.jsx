@@ -1,14 +1,17 @@
-import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
 import { useState, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 import ScoreRow from "./ScoreRow";
 
-export default function AddNewCard({}) {
+export default function AddNewCard({ getFeed }) {
+	const session = useSession();
+	const supabase = useSupabaseClient();
 	const [loading, setLoading] = useState(false);
 	const [name, setName] = useState(null);
 	const [review, setReview] = useState(null);
 	const [score, setScore] = useState(0);
 	const [file, setFile] = useState(null);
+	const [category, setCategory] = useState(null);
 
 	async function uploadImage(event, session) {
 		try {
@@ -42,6 +45,7 @@ export default function AddNewCard({}) {
 				review,
 				score,
 				image: file,
+				category,
 				created_at: new Date().toISOString(),
 			};
 			let { error } = await supabase.from("reviews").insert(updates);
@@ -95,7 +99,9 @@ export default function AddNewCard({}) {
 						onChange={uploadImage}
 						disabled={loading}
 					/>
-					{file && <img fill style={{ objectFit: "cover" }} src={file} />}
+					{file && (
+						<img src={file} className="object-cover rounded-lg h-full relative z-0 w-full" />
+					)}
 				</div>
 				<div className="flex flex-col w-full justify-center">
 					<input
@@ -111,6 +117,74 @@ export default function AddNewCard({}) {
 						onChange={(e) => setReview(e.target.value)}
 						placeholder="What'd you think of it?"
 					/>
+					<div className="flex flex-row gap-2 mt-4">
+						<button
+							onClick={() => setCategory("item")}
+							className="flex flex-row items-center text-sm bg-amber-300 shadow-sm  rounded-md font-semibold border border-amber-400 px-2 text-gray-600 py-1"
+						>
+							{category === "item" && (
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									fill="none"
+									viewBox="0 0 24 24"
+									strokeWidth={1.5}
+									stroke="currentColor"
+									className="w-4 h-4 mr-1"
+								>
+									<path
+										strokeLinecap="round"
+										strokeLinejoin="round"
+										d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+									/>
+								</svg>
+							)}
+							<span>Item</span>
+						</button>
+						<button
+							onClick={() => setCategory("food")}
+							className="flex flex-row items-center text-sm bg-sky-300 shadow-sm  rounded-md font-semibold px-2 border border-sky-400 text-gray-600 py-1"
+						>
+							{category === "food" && (
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									fill="none"
+									viewBox="0 0 24 24"
+									strokeWidth={1.5}
+									stroke="currentColor"
+									className="w-4 h-4 mr-1"
+								>
+									<path
+										strokeLinecap="round"
+										strokeLinejoin="round"
+										d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+									/>
+								</svg>
+							)}
+							<span>Food</span>
+						</button>
+						<button
+							onClick={() => setCategory("experience")}
+							className="flex flex-row items-center text-sm bg-purple-300 shadow-sm  rounded-md font-semibold px-2 border border-purple-400 text-gray-600 py-1"
+						>
+							{category === "experience" && (
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									fill="none"
+									viewBox="0 0 24 24"
+									strokeWidth={1.5}
+									stroke="currentColor"
+									className="w-4 h-4 mr-1"
+								>
+									<path
+										strokeLinecap="round"
+										strokeLinejoin="round"
+										d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+									/>
+								</svg>
+							)}
+							<span>Experience</span>
+						</button>
+					</div>
 					<ScoreRow score={score} setScore={setScore} />
 					<button
 						className="bg-gray-100 py-2 rounded-md hover:bg-gray-200 md:self-start px-8"
