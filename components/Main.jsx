@@ -73,7 +73,7 @@ export default function Main({ session }) {
 							type="text"
 							value={username || ""}
 							className="border border-gray-200 rounded-md px-4 py-2"
-							onChange={(e) => setUsername(e.target.value)}
+							onChange={(e) => setUsername(e.target.value.trim())}
 						/>
 						<p className="mt-4 text-sm text-gray-500">
 							If you don&lsquo;t set a username, we&lsquo;ll assume you want all your reviews to be

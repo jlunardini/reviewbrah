@@ -125,7 +125,7 @@ export default function AddNewCard({ getFeed }) {
 							showError.show && showError.fields.name ? "border-red-500" : "border-gray-200"
 						} border  rounded-md px-4 py-2 transition-colors`}
 						value={name || ""}
-						onChange={(e) => setName(e.target.value)}
+						onChange={(e) => setName(e.target.value.trim())}
 						placeholder="What are you reviewing?"
 					/>
 					<textarea
