@@ -41,7 +41,7 @@ export default function TheFeed({}) {
 			<div className="px-4 mx-auto lg:w-[800px] flex flex-col">
 				<div className="flex flex-col w-full mb-16 lg:mb-24">
 					<h1 className="text-2xl lg:text-3xl mb-6 col-span-6">All recent reviews:</h1>
-					<div className="grid grid-cols-6 gap-16 lg:gap-12 w-full">
+					<div className="grid grid-cols-6 gap-6 lg:gap-12 w-full">
 						{feed &&
 							feed.map((item) => (
 								<ReviewCard

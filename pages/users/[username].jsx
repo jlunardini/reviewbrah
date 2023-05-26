@@ -25,8 +25,8 @@ export default function User() {
 					.single();
 				let { data, error, status } = await supabase
 					.from("reviews")
-					.select()
-					.eq("user", profile.data.id)
+					.select(`*`)
+					.eq("user_id", profile.data.id)
 					.order("created_at", { ascending: false });
 				if (error && status !== 406) {
 					throw error;
@@ -55,7 +55,9 @@ export default function User() {
 					</h1>
 					<div className="grid grid-cols-6 gap-16 lg:gap-12 w-full">
 						{feed &&
-							feed.map((item) => <ReviewCard key={item.id} review={item} username={false} />)}
+							feed.map((item) => (
+								<ReviewCard key={item.id} review={item} username={false} category={true} />
+							))}
 					</div>
 				</div>
 			</div>

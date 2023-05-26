@@ -40,7 +40,7 @@ export default function AddNewCard({ getFeed }) {
 		try {
 			setLoading(true);
 			const updates = {
-				user: session.user.id,
+				user_id: session.user.id,
 				name,
 				review,
 				score,
@@ -117,7 +117,7 @@ export default function AddNewCard({ getFeed }) {
 						onChange={(e) => setReview(e.target.value)}
 						placeholder="What'd you think of it?"
 					/>
-					<div className="flex flex-row gap-2 mt-4">
+					<div className="flex flex-row gap-2 mt-4 justify-end md:justify-start">
 						<button
 							onClick={() => setCategory("item")}
 							className="flex flex-row items-center text-sm bg-amber-300 shadow-sm  rounded-md font-semibold border border-amber-400 px-2 text-gray-600 py-1"
@@ -183,6 +183,28 @@ export default function AddNewCard({ getFeed }) {
 								</svg>
 							)}
 							<span>Experience</span>
+						</button>
+						<button
+							onClick={() => setCategory("media")}
+							className="flex flex-row items-center text-sm bg-green-300 shadow-sm  rounded-md font-semibold px-2 border border-green-400 text-gray-600 py-1"
+						>
+							{category === "media" && (
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									fill="none"
+									viewBox="0 0 24 24"
+									strokeWidth={1.5}
+									stroke="currentColor"
+									className="w-4 h-4 mr-1"
+								>
+									<path
+										strokeLinecap="round"
+										strokeLinejoin="round"
+										d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+									/>
+								</svg>
+							)}
+							<span>Media</span>
 						</button>
 					</div>
 					<ScoreRow score={score} setScore={setScore} />
