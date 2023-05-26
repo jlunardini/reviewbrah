@@ -19,7 +19,8 @@ export default function TheFeed({}) {
 			setLoading(true);
 			let { data, error, status } = await supabase
 				.from("reviews")
-				.select(`*, user(username)`)
+				.select("*, user_id!inner ( username )")
+				.not("user_id.username", "is", "null")
 				.order("created_at", { ascending: false });
 			if (error && status !== 406) {
 				throw error;
@@ -43,7 +44,13 @@ export default function TheFeed({}) {
 					<div className="grid grid-cols-6 gap-16 lg:gap-12 w-full">
 						{feed &&
 							feed.map((item) => (
-								<ReviewCard key={item.id} review={item} username={true} category={true} />
+								<ReviewCard
+									key={item.id}
+									review={item}
+									username={true}
+									category={true}
+									showEdit={false}
+								/>
 							))}
 					</div>
 				</div>

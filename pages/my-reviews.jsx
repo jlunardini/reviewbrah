@@ -24,8 +24,8 @@ export default function MyReview({}) {
 			setLoading(true);
 			let { data, error, status } = await supabase
 				.from("reviews")
-				.select(`name, review, user(username), score, image, category, created_at`)
-				.eq("user", session.user.id)
+				.select(`id, name, review, user_id(username), score, image, category, created_at`)
+				.eq("user_id", session.user.id)
 				.order("created_at", { ascending: false });
 			if (error && status !== 406) {
 				throw error;
@@ -51,7 +51,14 @@ export default function MyReview({}) {
 					<div className="grid grid-cols-6 gap-16 lg:gap-12 w-full">
 						{feed &&
 							feed.map((item) => (
-								<ReviewCard key={item.id} review={item} username={false} category={true} />
+								<ReviewCard
+									key={item.id}
+									review={item}
+									username={false}
+									category={true}
+									showEdit={true}
+									getFeed={getFeed}
+								/>
 							))}
 					</div>
 				</div>
