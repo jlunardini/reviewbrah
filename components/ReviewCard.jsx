@@ -100,7 +100,7 @@ export default function ReviewCard({ review, username, category, showEdit, getFe
 							)}
 						</div>
 					</div>
-					<div className="flex flex-row items-center gap-2 mt-6 lg:mt-0">
+					<div className="flex flex-row items-center gap-2 mt-6 lg:mt-4">
 						{category && review.category && review.category === "item" && (
 							<Link
 								href={"/categories/item"}
