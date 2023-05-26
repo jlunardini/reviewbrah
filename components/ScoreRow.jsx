@@ -1,4 +1,4 @@
-export default function ScoreRow({ score, setScore }) {
+export default function ScoreRow({ score, setScore, error }) {
 	return (
 		<div className="flex flex-row items-center my-6 gap-2 justify-end md:justify-start">
 			<div className="flex flex-row items-center">
@@ -9,8 +9,8 @@ export default function ScoreRow({ score, setScore }) {
 					viewBox="0 0 24 24"
 					strokeWidth={1.5}
 					stroke="currentColor"
-					className={`${
-						score <= -2 ? "fill-yellow-300" : "hover:fill-yellow-300"
+					className={`${score <= -2 ? "fill-yellow-300" : "hover:fill-yellow-300"} ${
+						error && "stroke-red-500"
 					} w-6 h-6 cursor-pointer peer transition`}
 				>
 					<path
@@ -26,8 +26,8 @@ export default function ScoreRow({ score, setScore }) {
 					viewBox="0 0 24 24"
 					strokeWidth={1.5}
 					stroke="currentColor"
-					className={`${
-						score <= -1 ? "fill-yellow-300" : ""
+					className={`${score <= -1 ? "fill-yellow-300" : ""}  ${
+						error && "stroke-red-500"
 					} w-6 h-6 cursor-pointer peer-hover:fill-yellow-300 hover:fill-yellow-300 transition`}
 				>
 					<path
@@ -39,8 +39,8 @@ export default function ScoreRow({ score, setScore }) {
 			</div>
 			<div className="flex flex-row-reverse items-center">
 				<svg
-					className={`${
-						score >= 2 ? "fill-yellow-300" : "hover:fill-yellow-300"
+					className={`${score >= 2 ? "fill-yellow-300" : "hover:fill-yellow-300"}  ${
+						error && "stroke-red-500"
 					} w-6 h-6 peer cursor-pointer transition`}
 					xmlns="http://www.w3.org/2000/svg"
 					fill="none"
@@ -56,8 +56,8 @@ export default function ScoreRow({ score, setScore }) {
 					/>
 				</svg>
 				<svg
-					className={`${
-						score >= 1 ? "fill-yellow-300" : "peer-hover:fill-yellow-300"
+					className={`${score >= 1 ? "fill-yellow-300" : "peer-hover:fill-yellow-300"}  ${
+						error && "stroke-red-500"
 					} w-6 h-6 cursor-pointer hover:fill-yellow-300 transition`}
 					xmlns="http://www.w3.org/2000/svg"
 					fill="none"

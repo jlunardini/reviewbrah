@@ -41,13 +41,14 @@ export default function AddNewCard({ getFeed }) {
 	}
 
 	async function addReview() {
-		if (name === null || name === "" || review == "" || review === null) {
+		if (name === null || name === "" || review == "" || review === null || score === 0) {
 			setShowError({
 				show: true,
 				message: null,
 				fields: {
 					name: name === null || name === "",
 					review: review == "" || review === null,
+					score: score === 0,
 				},
 			});
 			return;
@@ -226,7 +227,11 @@ export default function AddNewCard({ getFeed }) {
 							<span>Media</span>
 						</button>
 					</div>
-					<ScoreRow score={score} setScore={setScore} />
+					<ScoreRow
+						score={score}
+						setScore={setScore}
+						error={showError.show && showError.fields.score}
+					/>
 					<button
 						className="bg-gray-100 py-2 rounded-md hover:bg-gray-200 md:self-start px-8"
 						onClick={() => addReview()}
