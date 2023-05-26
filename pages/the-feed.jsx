@@ -38,8 +38,8 @@ export default function TheFeed({}) {
 	return (
 		<Primary>
 			<div className="px-4 mx-auto lg:w-[800px] flex flex-col">
-				<div className="mt-8 lg:mt-4 flex flex-col w-full mb-16 lg:mb-24">
-					<h1 className="text-2xl lg:text-3xl mb-6 lg:mb-4 lg:mb-6 col-span-6">Recent reviews:</h1>
+				<div className="flex flex-col w-full mb-16 lg:mb-24">
+					<h1 className="text-2xl lg:text-3xl mb-6 col-span-6">Recent reviews:</h1>
 					<div className="grid grid-cols-6 gap-12 lg:gap-8 w-full">
 						{feed && feed.map((item) => <ReviewCard key={item.id} review={item} username={true} />)}
 					</div>

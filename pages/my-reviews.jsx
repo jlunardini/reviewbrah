@@ -9,7 +9,7 @@ import { v4 as uuidv4 } from "uuid";
 export default function MyReview({}) {
 	const session = useSession();
 	const supabase = useSupabaseClient();
-	const [loading, setLoading] = useState(true);
+	const [loading, setLoading] = useState(false);
 	const [feed, setFeed] = useState(null);
 
 	useEffect(() => {
@@ -17,7 +17,7 @@ export default function MyReview({}) {
 			getFeed();
 		}
 		return () => {};
-	}, [supabase]);
+	}, [session]);
 
 	async function getFeed() {
 		try {
@@ -32,6 +32,7 @@ export default function MyReview({}) {
 			}
 			if (data) {
 				setFeed(data);
+				console.log(data);
 			}
 		} catch (error) {
 			alert("Error loading user data!");
