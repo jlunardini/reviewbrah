@@ -29,7 +29,6 @@ export default function TheFeed({}) {
 				setFeed(data);
 			}
 		} catch (error) {
-			alert("Error loading user data!");
 			console.log(error);
 		} finally {
 			setLoading(false);

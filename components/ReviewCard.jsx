@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
 import { useState } from "react";
+import RankingRow from "./RankingRow";
 
 export default function ReviewCard({ review, username, category, showEdit, getFeed }) {
 	var date = new Date(review.created_at);
@@ -15,7 +16,7 @@ export default function ReviewCard({ review, username, category, showEdit, getFe
 
 	return (
 		<div className="flex flex-col col-span-6 ">
-			<div className="flex flex-col md:flex-row gap-6 lg:gap-8 bg-white shadow-sm rounded-lg p-5 peer">
+			<div className="flex flex-col md:flex-row gap-6 lg:gap-8 bg-white shadow-sm rounded-lg p-5 peer relative z-10">
 				{review.image && (
 					<img
 						src={review.image}
@@ -152,6 +153,7 @@ export default function ReviewCard({ review, username, category, showEdit, getFe
 				</div>
 			</div>
 			<div className="flex flex-row items-center justify-between mt-3">
+				<RankingRow review={review} />
 				{showEdit && (
 					<div className="flex flex-row items-center justify-end w-full gap-4">
 						<svg
