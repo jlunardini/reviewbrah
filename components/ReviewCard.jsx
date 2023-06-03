@@ -312,7 +312,11 @@ export default function ReviewCard({ review, i, username, category, showEdit, ge
 							</motion.div>
 						</motion.div>
 						{comments.map((comment) => (
-							<motion.div layout className="mt-8 flex flex-row w-full items-center">
+							<motion.div
+								key={comment.id}
+								layout
+								className="mt-8 flex flex-row w-full items-center"
+							>
 								<motion.div layout className="flex flex-col mr-8 gap-1 lg:w-[200px]">
 									<motion.p layout className="text-sm text-gray1">
 										{comment.name}
