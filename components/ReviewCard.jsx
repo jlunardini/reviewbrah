@@ -273,7 +273,7 @@ export default function ReviewCard({ review, i, username, category, showEdit, ge
 						className="flex flex-col items-center w-full"
 						layout="size"
 					>
-						<motion.div layout className="mt-12 flex flex-col lg:w-full">
+						<motion.div layout className="mt-12 flex flex-col w-full">
 							<p className="text-sm text-gray1 mb-2 font-semibold">Add a comment</p>
 							<motion.div layout="size" className="flex flex-row gap-2">
 								<motion.textarea
@@ -315,9 +315,9 @@ export default function ReviewCard({ review, i, username, category, showEdit, ge
 							<motion.div
 								key={comment.id}
 								layout
-								className="mt-8 flex flex-row w-full items-center"
+								className="mt-8 flex flex-col md:flex-row w-full items-start md:items-center last:mb-12"
 							>
-								<motion.div layout className="flex flex-col mr-8 gap-1 lg:w-[200px]">
+								<motion.div layout className="flex flex-col md:mr-8 gap-1 md:w-[200px]">
 									<motion.p layout className="text-sm text-gray1">
 										{comment.name}
 									</motion.p>
@@ -325,7 +325,7 @@ export default function ReviewCard({ review, i, username, category, showEdit, ge
 										{parsed}
 									</motion.p>
 								</motion.div>
-								<div className="flex items-start justify-between rounded-lg bg-white2 p-4 px-8 shadow-sm w-full">
+								<div className="mt-4 lg:mt-0 flex items-start justify-between rounded-lg bg-white2 p-4 px-8 shadow-sm w-full">
 									<motion.p>{comment.comment}</motion.p>
 									{/* <button className="flex flex-row items-center gap-1 px-2 py-1 text-sm hover:bg-gray-200 rounded-md relative z-0 text-gray-600 font-mono">
 										<svg
