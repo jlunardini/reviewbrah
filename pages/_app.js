@@ -16,6 +16,7 @@ function MyApp({ Component, pageProps }) {
 		<>
 			<Head>
 				<title>Reviewbrah</title>
+				<meta name="theme-color" content="#FAFAFA" />
 			</Head>
 			<SessionContextProvider supabaseClient={supabase} initialSession={pageProps.initialSession}>
 				<main className={`${inter.variable} font-sans`}>
