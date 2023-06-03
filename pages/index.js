@@ -2,6 +2,8 @@ import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
 import Main from "../components/Main";
+import Primary from "../layouts/Primary";
+import Card from "../components/Card";
 
 const Home = () => {
 	const session = useSession();
@@ -16,29 +18,27 @@ const Home = () => {
 							<p className="font-semibold text-lg">Reviewbreh - Review anything.</p>
 						</div>
 					</div>
-					<div className="py-12 lg:py-16 flex-grow">
-						<div className="px-4 mx-auto lg:w-[800px] flex flex-col">
-							<div className="p-5 rounded-lg shadow-sm bg-white">
-								<Auth
-									supabaseClient={supabase}
-									appearance={{
-										theme: ThemeSupa,
-										variables: {
-											default: {
-												colors: {
-													brand: "#f3f4f6",
-													brandAccent: "#f3f4f6",
-													brandButtonText: "black",
-												},
+					<Primary nav={false}>
+						<Card>
+							<Auth
+								supabaseClient={supabase}
+								appearance={{
+									theme: ThemeSupa,
+									variables: {
+										default: {
+											colors: {
+												brand: "#f3f4f6",
+												brandAccent: "#f3f4f6",
+												brandButtonText: "black",
 											},
 										},
-									}}
-									theme="light"
-									providers={[]}
-								/>
-							</div>
-						</div>
-					</div>
+									},
+								}}
+								theme="light"
+								providers={[]}
+							/>
+						</Card>
+					</Primary>
 				</div>
 			) : (
 				<Main session={session} />

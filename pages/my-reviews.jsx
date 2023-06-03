@@ -5,14 +5,19 @@ import ReviewCard from "../components/ReviewCard";
 import AddNewCard from "../components/AddNewCard";
 import { useState, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
+import { useRouter } from "next/router";
 
 export default function MyReview({}) {
 	const session = useSession();
 	const supabase = useSupabaseClient();
+	const router = useRouter();
 	const [loading, setLoading] = useState(false);
 	const [feed, setFeed] = useState(null);
 
 	useEffect(() => {
+		if (!session || !session.user) {
+			router.push("/");
+		}
 		if (session && session.user) {
 			getFeed();
 		}
@@ -35,7 +40,6 @@ export default function MyReview({}) {
 				console.log(data);
 			}
 		} catch (error) {
-			
 			console.log(error);
 		} finally {
 			setLoading(false);
@@ -43,24 +47,22 @@ export default function MyReview({}) {
 	}
 
 	return (
-		<Primary>
-			<div className="px-4 mx-auto lg:w-[800px] flex flex-col">
-				<AddNewCard getFeed={getFeed} />
-				<div className="mt-20 lg:mt-24 flex flex-col w-full mb-16 lg:mb-24">
-					<h1 className="text-2xl lg:text-3xl mb-6 col-span-6">Your recent reviews:</h1>
-					<div className="grid grid-cols-6 gap-16 lg:gap-12 w-full">
-						{feed &&
-							feed.map((item) => (
-								<ReviewCard
-									key={item.id}
-									review={item}
-									username={false}
-									category={true}
-									showEdit={true}
-									getFeed={getFeed}
-								/>
-							))}
-					</div>
+		<Primary nav={true}>
+			<AddNewCard getFeed={getFeed} />
+			<div className="mt-20 lg:mt-24 flex flex-col w-full mb-16 lg:mb-24">
+				<h1 className="text-2xl lg:text-3xl mb-6 col-span-6">Your recent reviews:</h1>
+				<div className="grid grid-cols-6 gap-16 lg:gap-12 w-full">
+					{feed &&
+						feed.map((item) => (
+							<ReviewCard
+								key={item.id}
+								review={item}
+								username={false}
+								category={true}
+								showEdit={true}
+								getFeed={getFeed}
+							/>
+						))}
 				</div>
 			</div>
 		</Primary>

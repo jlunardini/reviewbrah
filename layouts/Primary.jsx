@@ -1,39 +1,44 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 
-export default function Primary({ children }) {
+export default function Primary({ children, nav }) {
 	const router = useRouter();
 	return (
 		<div className="flex flex-col w-full bg-white1 min-h-[calc(100dvh)] overflow-x-auto">
-			<div className="bg-white2 shadow-sm h-auto">
-				<div className="max-w-full lg:max-w-[800px] px-4 lg:mx-auto flex flex-row justify-center md:justify-between  gap-4 lg:gap-8 py-4 ">
-					<Link
-						href="/my-reviews"
-						className={`${
-							router.pathname == "/my-reviews" ? "bg-white1 text-black" : "text-gray1"
-						} flex-1 md:flex-grow-0 text-center whitespace-nowrap px-4 py-2 hover:bg-white1 rounded-md transition-colors`}
-					>
-						My Reviews
-					</Link>
-					<Link
-						href="/the-feed"
-						className={`${
-							router.pathname == "/the-feed" ? "bg-white1 text-black" : "text-gray1"
-						} flex-1 md:flex-grow-0 text-center whitespace-nowrap px-4 py-2 hover:bg-white1 rounded-md transition-colors`}
-					>
-						The Feed
-					</Link>
-					<Link
-						href="/"
-						className={`${
-							router.pathname == "/" ? "bg-white1 text-black" : "text-gray1"
-						} flex-1 md:flex-grow-0 text-center whitespace-nowrap px-4 py-2 hover:bg-white1 rounded-md transition-colors`}
-					>
-						Profile
-					</Link>
+			{nav && (
+				<div className="bg-white2 shadow-sm h-auto">
+					<div className="max-w-full lg:max-w-[800px] px-4 lg:mx-auto flex flex-row justify-center md:justify-between  gap-4 lg:gap-8 py-4 ">
+						<Link
+							href="/my-reviews"
+							className={`${
+								router.pathname == "/my-reviews" ? "bg-white1 text-black" : "text-gray1"
+							} flex-1 md:flex-grow-0 text-center whitespace-nowrap px-4 py-2 hover:bg-white1 rounded-md transition-colors`}
+						>
+							My Reviews
+						</Link>
+						<Link
+							href="/the-feed"
+							className={`${
+								router.pathname == "/the-feed" ? "bg-white1 text-black" : "text-gray1"
+							} flex-1 md:flex-grow-0 text-center whitespace-nowrap px-4 py-2 hover:bg-white1 rounded-md transition-colors`}
+						>
+							The Feed
+						</Link>
+						<Link
+							href="/"
+							className={`${
+								router.pathname == "/" ? "bg-white1 text-black" : "text-gray1"
+							} flex-1 md:flex-grow-0 text-center whitespace-nowrap px-4 py-2 hover:bg-white1 rounded-md transition-colors`}
+						>
+							Profile
+						</Link>
+					</div>
 				</div>
+			)}
+
+			<div className="py-12 lg:py-16 flex-grow px-4 mx-auto lg:w-[800px] flex flex-col h-full">
+				{children}
 			</div>
-			<div className="py-12 lg:py-16 flex-grow">{children}</div>
 			<div className="bg-white2 shadow-sm relative bottom-0">
 				<div className="max-w-full lg:max-w-[800px] px-4 lg:mx-auto flex flex-row justify-center  gap-4 lg:gap-8 py-4">
 					<div className="p-0 lg:px-5 flex flex-row items-center">

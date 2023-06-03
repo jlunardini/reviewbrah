@@ -45,19 +45,17 @@ export default function User() {
 	}, [router]);
 
 	return (
-		<Primary>
-			<div className="px-4 mx-auto lg:w-[800px] flex flex-col">
-				<div className="flex flex-col w-full mb-16 lg:mb-24">
-					<h1 className="text-2xl lg:text-3xl mb-6 col-span-6">
-						Recent reviews by: {""}
-						{router.query.username == undefined ? "" : router.query.username}
-					</h1>
-					<div className="grid grid-cols-6 gap-16 lg:gap-12 w-full">
-						{feed &&
-							feed.map((item) => (
-								<ReviewCard key={item.id} review={item} username={false} category={true} />
-							))}
-					</div>
+		<Primary nav={true}>
+			<div className="flex flex-col w-full mb-16 lg:mb-24">
+				<h1 className="text-2xl lg:text-3xl mb-6 col-span-6">
+					Recent reviews by: {""}
+					{router.query.username == undefined ? "" : router.query.username}
+				</h1>
+				<div className="grid grid-cols-6 gap-16 lg:gap-12 w-full">
+					{feed &&
+						feed.map((item) => (
+							<ReviewCard key={item.id} review={item} username={false} category={true} />
+						))}
 				</div>
 			</div>
 		</Primary>

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useUser, useSupabaseClient } from "@supabase/auth-helpers-react";
 import Primary from "../layouts/Primary";
 import { useRouter } from "next/router";
+import Card from "../components/Card";
 
 export default function Main({ session }) {
 	const supabase = useSupabaseClient();
@@ -11,14 +12,12 @@ export default function Main({ session }) {
 	const router = useRouter();
 
 	useEffect(() => {
-		getProfile();
-	}, [session]);
-
-	useEffect(() => {
 		if (!user) {
 			router.push("/");
+		} else {
+			getProfile();
 		}
-	}, [user]);
+	}, [session]);
 
 	async function getProfile() {
 		try {
@@ -73,52 +72,50 @@ export default function Main({ session }) {
 		);
 	} else
 		return (
-			<Primary>
-				<div className="px-4 mx-auto lg:w-[800px] flex flex-col h-full">
-					<div className="form-widget px-4 rounded-lg  mb-12 text-center">
-						<p className="text-2xl text-gray1 mb-6">{session.user.email}</p>
-						<div className="flex flex-row gap-4 w-full justify-center">
-							<p className="text-sm text-gray1 mb-2">Member Since: 2023</p>
-							<p className="text-sm text-gray1">Total Reviews: 10</p>
-						</div>
-					</div>
-
-					<div className="form-widget px-8 py-8 lg:p-8 rounded-lg shadow-sm bg-white2">
-						<div className="flex flex-col mb-6">
-							<label className="mb-2 text-md text-gray1" htmlFor="username">
-								Username
-							</label>
-							<input
-								id="username"
-								type="text"
-								value={username || ""}
-								className="border border-gray-200 rounded-md px-4 py-2"
-								onChange={(e) => setUsername(e.target.value.trim())}
-							/>
-							<p className="mt-4 text-sm text-gray-500 leading-[26px]">
-								If you don&lsquo;t set a username, we&lsquo;ll assume you want all your reviews to
-								be private and they will not appear in the feed for others. If you do set a
-								username, we&lsquo;ll assume you&lsquo;re ok with sharing, and all your reviews will
-								be visible to others.
-							</p>
-						</div>
-						<div className="flex flex-row gap-6 mt-12 lg:mt-8 flex-wrap md:flex-nowrap">
-							<button
-								className="bg-white1 py-2 rounded-md hover:bg-gray-200 md:self-start px-8 w-full "
-								onClick={() => updateProfile({ username })}
-								disabled={loading}
-							>
-								{loading ? "Loading ..." : "Update"}
-							</button>
-							<button
-								className="bg-red-400 hover:bg-red-500 text-white py-2 rounded-md  px-8 w-full"
-								onClick={() => supabase.auth.signOut()}
-							>
-								Sign Out
-							</button>
-						</div>
+			<Primary nav={true}>
+				<div className="px-4 rounded-lg  mb-12 text-center">
+					<p className="text-2xl text-gray1 mb-6">{session.user.email}</p>
+					<div className="flex flex-row gap-4 w-full justify-center">
+						<p className="text-sm text-gray1 mb-2">Member Since: 2023</p>
+						<p className="text-sm text-gray1">Total Reviews: 10</p>
 					</div>
 				</div>
+
+				<Card>
+					<div className="flex flex-col mb-6">
+						<label className="mb-2 text-md text-gray1" htmlFor="username">
+							Username
+						</label>
+						<input
+							id="username"
+							type="text"
+							value={username || ""}
+							className="border border-gray-200 rounded-md px-4 py-2"
+							onChange={(e) => setUsername(e.target.value.trim())}
+						/>
+						<p className="mt-4 text-sm text-gray-500 leading-[26px]">
+							If you don&lsquo;t set a username, we&lsquo;ll assume you want all your reviews to be
+							private and they will not appear in the feed for others. If you do set a username,
+							we&lsquo;ll assume you&lsquo;re ok with sharing, and all your reviews will be visible
+							to others.
+						</p>
+					</div>
+					<div className="flex flex-row gap-6 mt-12 lg:mt-8 flex-wrap md:flex-nowrap">
+						<button
+							className="bg-white1 py-2 rounded-md hover:bg-gray-200 md:self-start px-8 w-full "
+							onClick={() => updateProfile({ username })}
+							disabled={loading}
+						>
+							{loading ? "Loading ..." : "Update"}
+						</button>
+						<button
+							className="bg-red-400 hover:bg-red-500 text-white py-2 rounded-md  px-8 w-full"
+							onClick={() => supabase.auth.signOut()}
+						>
+							Sign Out
+						</button>
+					</div>
+				</Card>
 			</Primary>
 		);
 }
