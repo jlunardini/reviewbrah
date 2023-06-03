@@ -2,8 +2,10 @@ import Link from "next/link";
 import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
 import { useState } from "react";
 import RankingRow from "./RankingRow";
+import CommentRow from "./CommentRow";
+import { motion, AnimatePresence } from "framer-motion";
 
-export default function ReviewCard({ review, username, category, showEdit, getFeed }) {
+export default function ReviewCard({ review, i, username, category, showEdit, getFeed }) {
 	var date = new Date(review.created_at);
 	var parsed = date.getMonth() + 1 + "/" + date.getDate() + "/" + date.getFullYear();
 	const session = useSession();
@@ -13,10 +15,36 @@ export default function ReviewCard({ review, username, category, showEdit, getFe
 		getFeed();
 	}
 	const [confirmDelete, setConfirmDelete] = useState(false);
+	const [showComments, setShowComments] = useState(false);
+	const [newComment, setNewComment] = useState("");
+
+	const comments = [
+		{ name: "theg00chmane", comment: "testing comment, testing comment, testing comment" },
+		{
+			name: "theg00chmane",
+			comment:
+				"testing comment, testing comment, testing comment, testing comment, testing comment",
+		},
+	];
 
 	return (
-		<div className="flex flex-col col-span-6 ">
-			<div className="flex flex-col md:flex-row gap-6 lg:gap-8 bg-white shadow-sm rounded-lg p-5 peer relative z-10">
+		<motion.div
+			initial={{ opacity: 0 }}
+			animate={{
+				opacity: 1,
+				transition: {
+					delay: 0.2 * i,
+				},
+			}}
+			exit={{ opacity: 0 }}
+			key="feed-container"
+			layout="size"
+			className="flex flex-col col-span-6 "
+		>
+			<motion.div
+				layout="size"
+				className="flex flex-col md:flex-row gap-6 lg:gap-8 bg-white2 shadow-md rounded-lg p-8  peer relative z-10"
+			>
 				{review.image && (
 					<img
 						src={review.image}
@@ -25,9 +53,9 @@ export default function ReviewCard({ review, username, category, showEdit, getFe
 				)}
 				<div className="flex flex-col justify-center relative w-full">
 					<div className="flex flex-col flex-grow h-full justify-center">
-						<p className="text-sm text-gray-400 mb-2">{parsed}</p>
-						<h2 className="font-semibold text-xl">{review.name}</h2>
-						<p className="mt-3 text-gray-600 lg:max-w-xs">{review.review}</p>
+						<p className="text-sm text-gray-400 mb-6">{parsed}</p>
+						<h2 className="font-semibold text-xl font-sans mb-4">{review.name}</h2>
+						<p className="mb-2 text-gray-600 lg:max-w-xs">{review.review}</p>
 						<div className="flex flex-row items-center gap-2 mt-4">
 							{review.score < 0 ? (
 								<>
@@ -104,56 +132,63 @@ export default function ReviewCard({ review, username, category, showEdit, getFe
 							)}
 						</div>
 					</div>
-					<div className="flex flex-row items-center gap-2 mt-6 lg:mt-4">
-						{category && review.category && review.category === "item" && (
-							<Link
-								href={"/categories/item"}
-								className="flex flex-row items-center text-sm bg-transparent shadow-sm  rounded-md font-semibold px-2 border border-amber-400 text-amber-400 hover:border-amber-500 hover:text-amber-500 py-1"
-							>
-								<span>#Food</span>
-							</Link>
-						)}
-
-						{category && review.category && review.category === "food" && (
-							<Link
-								href={"/categories/food"}
-								className="flex flex-row items-center text-sm bg-transparent shadow-sm  rounded-md font-semibold px-2 border border-sky-400 text-sky-400 hover:border-sky-500 hover:text-sky-500 py-1"
-							>
-								<span>#Food</span>
-							</Link>
-						)}
-
-						{category && review.category && review.category === "experience" && (
-							<Link
-								href={"/categories/experience"}
-								className="flex flex-row items-center text-sm bg-transparent shadow-sm  rounded-md font-semibold px-2 border border-purple-400 text-purple-400 py-1 hover:border-purple-500 hover:text-purple-500"
-							>
-								<span>#Experience</span>
-							</Link>
-						)}
-
-						{category && review.category && review.category === "media" && (
-							<Link
-								href={"/categories/media"}
-								className="flex flex-row items-center text-sm bg-transparent shadow-sm  rounded-md font-semibold px-2 border border-green-500 text-green-500 py-1 hover:border-green-600 hover:text-green-600"
-							>
-								<span>#Media</span>
-							</Link>
-						)}
-
-						{username && (
-							<Link
-								href={`/users/${review.user_id.username}`}
-								className="hover:text-gray-500 text-gray-400 text-sm rounded-md font-semibold px-2 border border-gray-200 py-1 self-start"
-							>
-								#{review.user_id.username}
-							</Link>
-						)}
-					</div>
 				</div>
-			</div>
-			<div className="flex flex-row items-center justify-between mt-3">
-				<RankingRow review={review} />
+			</motion.div>
+			<motion.div layout="size" className="flex flex-row items-center justify-between mt-6">
+				<div className="flex flex-row-reverse items-center gap-2 lg:gap-4">
+					{category && review.category && review.category === "item" && (
+						<Link
+							href={"/categories/item"}
+							className="flex flex-row items-center text-sm bg-transparent    rounded-md font-semibold text-amber-400 hover:text-amber-500"
+						>
+							<span>#Food</span>
+						</Link>
+					)}
+
+					{category && review.category && review.category === "food" && (
+						<Link
+							href={"/categories/food"}
+							className="flex flex-row items-center text-sm bg-transparent  rounded-md font-semibold  text-sky-400 hover:text-sky-500 py-1"
+						>
+							<span>#Food</span>
+						</Link>
+					)}
+
+					{category && review.category && review.category === "experience" && (
+						<Link
+							href={"/categories/experience"}
+							className="flex flex-row items-center text-sm bg-transparent rounded-md font-semibold text-purple-400  hover:text-purple-500"
+						>
+							<span>#Experience</span>
+						</Link>
+					)}
+
+					{category && review.category && review.category === "media" && (
+						<Link
+							href={"/categories/media"}
+							className="flex flex-row items-center text-sm bg-transparent  rounded-md font-semibold text-green-500 hover:text-green-600"
+						>
+							<span>#Media</span>
+						</Link>
+					)}
+
+					{username && (
+						<Link
+							href={`/users/${review.user_id.username}`}
+							className="hover:text-gray-500 text-gray1 text-sm rounded-md font-semibold self-start"
+						>
+							#{review.user_id.username}
+						</Link>
+					)}
+				</div>
+				<div className="flex">
+					<CommentRow
+						review={review}
+						setShowComments={setShowComments}
+						showComments={showComments}
+					/>
+					<RankingRow review={review} />
+				</div>
 				{showEdit && (
 					<div className="flex flex-row items-center justify-end w-full gap-4">
 						<svg
@@ -223,7 +258,93 @@ export default function ReviewCard({ review, username, category, showEdit, getFe
 						</button>
 					</div>
 				)}
-			</div>
-		</div>
+			</motion.div>
+			<AnimatePresence>
+				{showComments && (
+					<motion.div
+						initial={{ opacity: 0, height: 0 }}
+						animate={{ opacity: 1, height: "auto" }}
+						exit={{ opacity: 0, height: 0 }}
+						key="comments"
+						transition={{
+							type: "tween",
+							ease: "easeInOut",
+						}}
+						className="flex flex-col items-center w-full"
+						layout="size"
+					>
+						<motion.div layout className="mt-12 flex flex-col lg:w-full">
+							<p className="text-sm text-gray1 mb-2 font-semibold">Add a comment</p>
+							<motion.div layout="size" className="flex flex-row gap-2">
+								<motion.textarea
+									layout="size"
+									id="new_comment"
+									type="text"
+									value={newComment}
+									className="shadow-sm w-full rounded-md bg-white2 px-4 py-4"
+									onChange={(e) => setNewComment(e.target.value)}
+								/>
+								<AnimatePresence>
+									{newComment != "" && (
+										<motion.button
+											initial={{ opacity: 0, width: 0, height: "100%" }}
+											animate={{ opacity: 1, width: "auto", height: "100%" }}
+											exit={{ opacity: 0, width: 0, height: "100%" }}
+											key="comments"
+											transition={{
+												type: "tween",
+												ease: "easeInOut",
+											}}
+											className="bg-white2 rounded-md hover:bg-gray-200 md:self-start"
+										>
+											<motion.span
+												initial={{ opacity: 0 }}
+												animate={{ opacity: 1 }}
+												exit={{ opacity: 0 }}
+												key="comment-save-button-text"
+												className="px-8"
+											>
+												Save
+											</motion.span>
+										</motion.button>
+									)}
+								</AnimatePresence>
+							</motion.div>
+						</motion.div>
+						{comments.map((comment) => (
+							<motion.div layout className="mt-8 flex flex-row w-full items-center">
+								<motion.div layout className="flex flex-col mr-8 gap-1 lg:w-[200px]">
+									<motion.p layout className="text-sm text-gray1">
+										{comment.name}
+									</motion.p>
+									<motion.p layout className="text-sm text-gray-400">
+										{parsed}
+									</motion.p>
+								</motion.div>
+								<div className="flex items-start justify-between rounded-lg bg-white2 p-4 px-8 shadow-sm w-full">
+									<motion.p>{comment.comment}</motion.p>
+									{/* <button className="flex flex-row items-center gap-1 px-2 py-1 text-sm hover:bg-gray-200 rounded-md relative z-0 text-gray-600 font-mono">
+										<svg
+											xmlns="http://www.w3.org/2000/svg"
+											fill="none"
+											viewBox="0 0 24 24"
+											strokeWidth={1.5}
+											stroke="currentColor"
+											className="w-5 h-5 flex-shrink-0"
+										>
+											<path
+												strokeLinecap="round"
+												strokeLinejoin="round"
+												d="M6.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM12.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM18.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"
+											/>
+										</svg>
+									</button> */}
+								</div>
+							</motion.div>
+						))}
+					</motion.div>
+				)}
+			</AnimatePresence>
+		</motion.div>
 	);
 }

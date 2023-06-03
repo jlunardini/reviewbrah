@@ -82,7 +82,9 @@ export default function AddNewCard({ getFeed }) {
 
 	return (
 		<>
-			<h1 className="text-2xl lg:text-3xl mb-6">Add new</h1>
+			<div className="mb-8 text-left">
+				<p className="text-2xl text-gray1">Add new:</p>
+			</div>
 			<Card>
 				<div className="flex flex-col lg:flex-row gap-4 lg:gap-8">
 					<div className="h-80 w-full lg:w-80 bg-gray-100 flex-shrink-0 rounded-md relative hover:bg-gray-200 group cursor-pointer border border-gray-200 shadow-sm">

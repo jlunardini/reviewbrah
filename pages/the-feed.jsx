@@ -3,6 +3,7 @@ import Primary from "../layouts/Primary";
 import { useEffect, useState } from "react";
 import ReviewCard from "../components/ReviewCard";
 import { useRouter } from "next/router";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function TheFeed({}) {
 	const session = useSession();
@@ -15,13 +16,6 @@ export default function TheFeed({}) {
 		getFeed();
 		return () => {};
 	}, [supabase]);
-
-	useEffect(() => {
-		if (!session || !session.user) {
-			router.push("/");
-		}
-		return () => {};
-	}, [session]);
 
 	async function getFeed() {
 		try {
@@ -47,19 +41,22 @@ export default function TheFeed({}) {
 	return (
 		<Primary nav={true}>
 			<div className="flex flex-col w-full mb-16 lg:mb-24">
-				<h1 className="text-2xl lg:text-3xl mb-6 col-span-6">All recent reviews:</h1>
-				<div className="grid grid-cols-6 gap-6 lg:gap-12 w-full">
+				<div className="mb-8 text-left">
+					<p className="text-2xl text-gray1">All Recent Reviews:</p>
+				</div>
+				<motion.div className="grid grid-cols-6 gap-6 lg:gap-24 w-full">
 					{feed &&
-						feed.map((item) => (
+						feed.map((item, i) => (
 							<ReviewCard
 								key={item.id}
+								i={i}
 								review={item}
 								username={true}
 								category={true}
 								showEdit={false}
 							/>
 						))}
-				</div>
+				</motion.div>
 			</div>
 		</Primary>
 	);

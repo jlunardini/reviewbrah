@@ -7,8 +7,9 @@ import Card from "../components/Card";
 export default function Main({ session }) {
 	const supabase = useSupabaseClient();
 	const user = useUser();
-	const [loading, setLoading] = useState(true);
+	const [loading, setLoading] = useState(false);
 	const [username, setUsername] = useState(null);
+	const [success, showSuccess] = useState(false);
 	const router = useRouter();
 
 	useEffect(() => {
@@ -62,6 +63,40 @@ export default function Main({ session }) {
 		}
 	}
 
+	function renderButtonText() {
+		if (loading) {
+			return (
+				<div
+					class="inline-block h-4 w-4 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
+					role="status"
+				>
+					<span class="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
+						Loading...
+					</span>
+				</div>
+			);
+		} else if (loading === false && showSuccess === true) {
+			return (
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					fill="none"
+					viewBox="0 0 24 24"
+					strokeWidth={1.5}
+					stroke="currentColor"
+					className="w-6 h-6"
+				>
+					<path
+						strokeLinecap="round"
+						strokeLinejoin="round"
+						d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+					/>
+				</svg>
+			);
+		} else if (loading === false && showSuccess === false) {
+			return `Update`;
+		}
+	}
+
 	if (!user) {
 		return (
 			<Primary>
@@ -73,14 +108,13 @@ export default function Main({ session }) {
 	} else
 		return (
 			<Primary nav={true}>
-				<div className="px-4 rounded-lg  mb-12 text-center">
+				<div className="mb-12 text-left">
 					<p className="text-2xl text-gray1 mb-6">{session.user.email}</p>
-					<div className="flex flex-row gap-4 w-full justify-center">
+					<div className="flex flex-row gap-4 w-full justify-start">
 						<p className="text-sm text-gray1 mb-2">Member Since: 2023</p>
 						<p className="text-sm text-gray1">Total Reviews: 10</p>
 					</div>
 				</div>
-
 				<Card>
 					<div className="flex flex-col mb-6">
 						<label className="mb-2 text-md text-gray1" htmlFor="username">
@@ -106,7 +140,7 @@ export default function Main({ session }) {
 							onClick={() => updateProfile({ username })}
 							disabled={loading}
 						>
-							{loading ? "Loading ..." : "Update"}
+							{renderButtonText()}
 						</button>
 						<button
 							className="bg-red-400 hover:bg-red-500 text-white py-2 rounded-md  px-8 w-full"

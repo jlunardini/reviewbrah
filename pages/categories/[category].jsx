@@ -15,11 +15,6 @@ export default function User() {
 		if (router.query.category == undefined) {
 			return;
 		}
-
-		if (!session || !session.user) {
-			router.push("/");
-		}
-
 		async function getFeed() {
 			try {
 				setLoading(true);

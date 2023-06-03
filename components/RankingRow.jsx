@@ -66,16 +66,16 @@ export default function RankingRow({ review }) {
 			return (
 				<button
 					onClick={() => addRanking()}
-					className="flex flex-row items-center gap-1 px-2 py-1 hover:bg-gray-200 rounded-md relative z-0 text-xl text-gray-600 font-mono"
+					className="flex flex-row items-center gap-1 px-2 py-1 text-sm hover:bg-gray-200 rounded-md relative z-0 text-gray-600 font-mono"
 				>
-					{ranking.count && <span className="">{ranking.count}</span>}
+					{ranking.count && <span>{ranking.count}</span>}
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
 						fill="none"
 						viewBox="0 0 24 24"
 						strokeWidth={1.5}
 						stroke="currentColor"
-						className="w-6 h-6 stroke-red-500"
+						className="w-5 h-5 stroke-red-500"
 					>
 						<path
 							strokeLinecap="round"
@@ -87,15 +87,15 @@ export default function RankingRow({ review }) {
 			);
 		} else if (review.user_id === session.user.id) {
 			return (
-				<div className="flex flex-row items-center gap-1 px-2 py-1 hover:bg-gray-200 rounded-md relative z-0 text-xl text-gray-600 font-mono">
-					{ranking.count && <span className="">{ranking.count}</span>}
+				<div className="flex flex-row items-center text-sm gap-1 px-2 py-1 hover:bg-gray-200 rounded-md relative z-0  text-gray-600 font-mono">
+					{ranking.count && <span>{ranking.count}</span>}
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
 						fill="none"
 						viewBox="0 0 24 24"
 						strokeWidth={1.5}
 						stroke="currentColor"
-						className="w-6 h-6 stroke-red-500 fill-red-500"
+						className="w-5 h-5 stroke-red-500 fill-red-500"
 					>
 						<path
 							strokeLinecap="round"
@@ -112,16 +112,16 @@ export default function RankingRow({ review }) {
 			return (
 				<button
 					onClick={() => addRanking()}
-					className="flex flex-row items-center gap-1 px-2 py-1 hover:bg-gray-200 rounded-md relative z-0 text-xl text-gray-600 font-mono"
+					className="flex flex-row items-center text-sm gap-1 px-2 py-1 hover:bg-gray-200 rounded-md relative z-0 text-gray-600 font-mono"
 				>
-					{ranking.count && <span className="">{ranking.count}</span>}
+					{ranking.count && <span>{ranking.count}</span>}
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
 						fill="none"
 						viewBox="0 0 24 24"
 						strokeWidth={1.5}
 						stroke="currentColor"
-						className="w-6 h-6 stroke-red-500"
+						className="w-5 h-5 stroke-red-500"
 					>
 						<path
 							strokeLinecap="round"
@@ -138,7 +138,7 @@ export default function RankingRow({ review }) {
 			return (
 				<button
 					onClick={() => deleteRanking()}
-					className="flex flex-row items-center gap-1 px-2 py-1 hover:bg-gray-200 rounded-md relative z-0 text-xl text-gray-600 font-mono"
+					className="flex flex-row items-center text-sm gap-1 px-2 py-1 hover:bg-gray-200 rounded-md relative z-0 text-gray-600 font-mono"
 				>
 					{ranking.count && <span className="">{ranking.count}</span>}
 					<svg
@@ -147,7 +147,7 @@ export default function RankingRow({ review }) {
 						viewBox="0 0 24 24"
 						strokeWidth={1.5}
 						stroke="currentColor"
-						className="w-6 h-6 stroke-red-500 fill-red-500"
+						className="w-5 h-5 stroke-red-500 fill-red-500"
 					>
 						<path
 							strokeLinecap="round"
@@ -161,7 +161,7 @@ export default function RankingRow({ review }) {
 	}
 
 	return (
-		<div className="flex flex-row items-center justify-between lg:mt-1">
+		<div className="flex flex-row items-center justify-between ">
 			<div className="flex flex-row items-center justify-end w-full gap-4">{returnHeart()}</div>
 		</div>
 	);
