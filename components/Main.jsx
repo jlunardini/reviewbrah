@@ -58,14 +58,13 @@ export default function Main({ session }) {
 	return (
 		<Primary>
 			<div className="px-4 mx-auto lg:w-[800px] flex flex-col h-full">
-				<h1 className="text-2xl lg:text-3xl mb-6">Profile details</h1>
-				<div className="form-widget p-5 rounded-lg shadow-sm bg-white">
-					<div className="mb-6">
-						<p className="mb-1 text-lg">Email:</p>
-						<p className="text-md">{session.user.email}</p>
+				<div className="form-widget px-8 py-8 lg:p-5 rounded-lg shadow-sm bg-white2">
+					<div className="mb-8">
+						<p className="mb-2 text-lg text-gray1">Email:</p>
+						<p className="text-md text-gray1">{session.user.email}</p>
 					</div>
 					<div className="flex flex-col mb-6">
-						<label className="mb-1 text-lg" htmlFor="username">
+						<label className="mb-1 text-lg text-gray1" htmlFor="username">
 							Username
 						</label>
 						<input
@@ -75,23 +74,23 @@ export default function Main({ session }) {
 							className="border border-gray-200 rounded-md px-4 py-2"
 							onChange={(e) => setUsername(e.target.value.trim())}
 						/>
-						<p className="mt-4 text-sm text-gray-500">
+						<p className="mt-4 text-sm text-gray-500 leading-[26px]">
 							If you don&lsquo;t set a username, we&lsquo;ll assume you want all your reviews to be
 							private and they will not appear in the feed for others. If you do set a username,
 							we&lsquo;ll assume you&lsquo;re ok with sharing, and all your reviews will be visible
 							to others.
 						</p>
 					</div>
-					<div className="flex flex-row gap-2">
+					<div className="flex flex-row gap-6 mt-12 flex-wrap">
 						<button
-							className="bg-gray-100 py-2 rounded-md hover:bg-gray-200 md:self-start px-8"
+							className="bg-gray-100 py-2 rounded-md hover:bg-gray-200 md:self-start px-8 w-full "
 							onClick={() => updateProfile({ username })}
 							disabled={loading}
 						>
 							{loading ? "Loading ..." : "Update"}
 						</button>
 						<button
-							className="bg-red-500 hover:bg-red-600 text-white py-2 rounded-md  px-8 "
+							className="bg-red-400 hover:bg-red-500 text-white py-2 rounded-md  px-8 w-full"
 							onClick={() => supabase.auth.signOut()}
 						>
 							Sign Out
