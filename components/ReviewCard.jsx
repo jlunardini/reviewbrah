@@ -1,8 +1,10 @@
 import Link from "next/link";
 import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import RankingRow from "./RankingRow";
 import CommentRow from "./CommentRow";
+import DeleteRow from "./DeleteRow";
+import BookmarkRow from "./BookmarkRow";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function ReviewCard({ review, i, username, category, showEdit, getFeed }) {
@@ -10,33 +12,77 @@ export default function ReviewCard({ review, i, username, category, showEdit, ge
 	var parsed = date.getMonth() + 1 + "/" + date.getDate() + "/" + date.getFullYear();
 	const session = useSession();
 	const supabase = useSupabaseClient();
+	const [confirmDelete, setConfirmDelete] = useState(false);
+	const [showComments, setShowComments] = useState(false);
+	const [newComment, setNewComment] = useState("");
+	const [comments, setComments] = useState([]);
+
 	async function deleteReview() {
 		const remove = await supabase.from("reviews").delete().eq("id", review.id);
 		getFeed();
 	}
-	const [confirmDelete, setConfirmDelete] = useState(false);
-	const [showComments, setShowComments] = useState(false);
-	const [newComment, setNewComment] = useState("");
 
-	const comments = [
-		{ name: "theg00chmane", comment: "testing comment, testing comment, testing comment" },
-		{
-			name: "theg00chmane",
-			comment:
-				"testing comment, testing comment, testing comment, testing comment, testing comment",
-		},
-	];
+	async function getComments() {
+		try {
+			let { data, error, status } = await supabase
+				.from("comments")
+				.select(`*, user_id(username)`)
+				.eq("review_id", review.id)
+				.single();
+			if (error && status !== 406) {
+				throw error;
+			}
+			if (data) {
+				console.log([data]);
+				setComments([data]);
+			}
+		} catch (error) {
+			alert("Error loading comments");
+			console.log(error);
+		} finally {
+		}
+	}
+
+	async function addComment() {
+		try {
+			const updates = {
+				user_id: session.user.id,
+				review_id: review.id,
+				comment: newComment,
+			};
+			let { error } = await supabase.from("comments").insert(updates);
+			if (error) throw error;
+		} catch (error) {
+			console.log(error);
+		} finally {
+		}
+	}
+
+	useEffect(() => {
+		getComments();
+		return () => {};
+	}, []);
+
+	// const comments = [
+	// 	{ name: "theg00chmane", comment: "testing comment, testing comment, testing comment" },
+	// 	{
+	// 		name: "theg00chmane",
+	// 		comment:
+	// 			"testing comment, testing comment, testing comment, testing comment, testing comment",
+	// 	},
+	// ];
 
 	return (
 		<motion.div
-			initial={{ opacity: 0 }}
+			initial={false}
 			animate={{
 				opacity: 1,
+				height: "auto",
 				transition: {
 					delay: 0.2 * i,
 				},
 			}}
-			exit={{ opacity: 0 }}
+			exit={{ opacity: 0, height: 0, transitionEnd: { display: "none" } }}
 			key="feed-container"
 			layout="size"
 			className="flex flex-col col-span-6 "
@@ -139,7 +185,7 @@ export default function ReviewCard({ review, i, username, category, showEdit, ge
 					{category && review.category && review.category === "item" && (
 						<Link
 							href={"/categories/item"}
-							className="flex flex-row items-center text-sm bg-transparent    rounded-md font-semibold text-amber-400 hover:text-amber-500"
+							className="flex flex-row items-center text-sm bg-transparent rounded-md font-semibold text-amber-400 hover:text-amber-500"
 						>
 							<span>#Food</span>
 						</Link>
@@ -148,7 +194,7 @@ export default function ReviewCard({ review, i, username, category, showEdit, ge
 					{category && review.category && review.category === "food" && (
 						<Link
 							href={"/categories/food"}
-							className="flex flex-row items-center text-sm bg-transparent  rounded-md font-semibold  text-sky-400 hover:text-sky-500 py-1"
+							className="flex flex-row items-center text-sm bg-transparent  rounded-md font-semibold  text-sky-400 hover:text-sky-500"
 						>
 							<span>#Food</span>
 						</Link>
@@ -181,82 +227,17 @@ export default function ReviewCard({ review, i, username, category, showEdit, ge
 						</Link>
 					)}
 				</div>
-				<div className="flex">
+				<div className="flex ml-4">
 					<CommentRow
 						review={review}
 						setShowComments={setShowComments}
 						showComments={showComments}
 					/>
 					<RankingRow review={review} />
+					<BookmarkRow review={review} />
 				</div>
 				{showEdit && (
-					<div className="flex flex-row items-center justify-end w-full gap-4">
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							fill="none"
-							viewBox="0 0 24 24"
-							strokeWidth={1.5}
-							stroke="currentColor"
-							className="w-7 h-7 lg:w-6 lg:w-6 stroke-gray-400"
-						>
-							<path
-								strokeLinecap="round"
-								strokeLinejoin="round"
-								d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"
-							/>
-						</svg>
-						{confirmDelete && (
-							<button onClick={() => deleteReview()}>
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									fill="none"
-									viewBox="0 0 24 24"
-									strokeWidth={1.5}
-									stroke="currentColor"
-									className="w-7 h-7 lg:w-6 lg:w-6 stroke-red-400"
-								>
-									<path
-										strokeLinecap="round"
-										strokeLinejoin="round"
-										d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-									/>
-								</svg>
-							</button>
-						)}
-						<button onClick={() => setConfirmDelete(!confirmDelete)}>
-							{confirmDelete ? (
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									fill="none"
-									viewBox="0 0 24 24"
-									strokeWidth={1.5}
-									stroke="currentColor"
-									className="w-7 h-7 lg:w-6 lg:w-6 stroke-gray-400"
-								>
-									<path
-										strokeLinecap="round"
-										strokeLinejoin="round"
-										d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-									/>
-								</svg>
-							) : (
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									fill="none"
-									viewBox="0 0 24 24"
-									strokeWidth={1.5}
-									stroke="currentColor"
-									className="w-7 h-7 lg:w-6 lg:w-6 stroke-red-500"
-								>
-									<path
-										strokeLinecap="round"
-										strokeLinejoin="round"
-										d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
-									/>
-								</svg>
-							)}
-						</button>
-					</div>
+					<DeleteRow review={review} session={session} supabase={supabase} getFeed={getFeed} />
 				)}
 			</motion.div>
 			<AnimatePresence>
@@ -273,61 +254,65 @@ export default function ReviewCard({ review, i, username, category, showEdit, ge
 						className="flex flex-col items-center w-full"
 						layout="size"
 					>
-						<motion.div layout className="mt-12 flex flex-col w-full">
-							<p className="text-sm text-gray1 mb-2 font-semibold">Add a comment</p>
-							<motion.div layout="size" className="flex flex-row gap-2">
-								<motion.textarea
-									layout="size"
-									id="new_comment"
-									type="text"
-									value={newComment}
-									className="shadow-sm w-full rounded-md bg-white2 px-4 py-4"
-									onChange={(e) => setNewComment(e.target.value)}
-								/>
-								<AnimatePresence>
-									{newComment != "" && (
-										<motion.button
-											initial={{ opacity: 0, width: 0, height: "100%" }}
-											animate={{ opacity: 1, width: "auto", height: "100%" }}
-											exit={{ opacity: 0, width: 0, height: "100%" }}
-											key="comments"
-											transition={{
-												type: "tween",
-												ease: "easeInOut",
-											}}
-											className="bg-white2 rounded-md hover:bg-gray-200 md:self-start"
-										>
-											<motion.span
-												initial={{ opacity: 0 }}
-												animate={{ opacity: 1 }}
-												exit={{ opacity: 0 }}
-												key="comment-save-button-text"
-												className="px-8"
+						{!showEdit && (
+							<motion.div layout className="mt-12 flex flex-col w-full">
+								<p className="text-sm text-gray1 mb-2 font-semibold">Add a comment</p>
+								<motion.div layout="size" className="flex flex-row gap-2">
+									<motion.textarea
+										layout="size"
+										id="new_comment"
+										type="text"
+										value={newComment}
+										className="shadow-sm w-full rounded-md bg-white2 px-4 py-4"
+										onChange={(e) => setNewComment(e.target.value)}
+									/>
+									<AnimatePresence>
+										{newComment != "" && (
+											<motion.button
+												onClick={() => addComment()}
+												initial={{ opacity: 0, width: 0, height: "100%" }}
+												animate={{ opacity: 1, width: "auto", height: "100%" }}
+												exit={{ opacity: 0, width: 0, height: "100%" }}
+												key="comments"
+												transition={{
+													type: "tween",
+													ease: "easeInOut",
+												}}
+												className="bg-white2 rounded-md hover:bg-gray-200 md:self-start"
 											>
-												Save
-											</motion.span>
-										</motion.button>
-									)}
-								</AnimatePresence>
-							</motion.div>
-						</motion.div>
-						{comments.map((comment) => (
-							<motion.div
-								key={comment.id}
-								layout
-								className="mt-8 flex flex-col md:flex-row w-full items-start md:items-center last:mb-12"
-							>
-								<motion.div layout className="flex flex-col md:mr-8 gap-1 md:w-[200px]">
-									<motion.p layout className="text-sm text-gray1">
-										{comment.name}
-									</motion.p>
-									<motion.p layout className="text-sm text-gray-400">
-										{parsed}
-									</motion.p>
+												<motion.span
+													initial={{ opacity: 0 }}
+													animate={{ opacity: 1 }}
+													exit={{ opacity: 0 }}
+													key="comment-save-button-text"
+													className="px-8"
+												>
+													Save
+												</motion.span>
+											</motion.button>
+										)}
+									</AnimatePresence>
 								</motion.div>
-								<div className="mt-4 lg:mt-0 flex items-start justify-between rounded-lg bg-white2 p-4 px-8 shadow-sm w-full">
-									<motion.p>{comment.comment}</motion.p>
-									{/* <button className="flex flex-row items-center gap-1 px-2 py-1 text-sm hover:bg-gray-200 rounded-md relative z-0 text-gray-600 font-mono">
+							</motion.div>
+						)}
+						{comments &&
+							comments.map((comment) => (
+								<motion.div
+									key={comment.id}
+									layout
+									className="mt-8 flex flex-col md:flex-row w-full items-start md:items-center"
+								>
+									<motion.div layout className="flex flex-col md:mr-8 gap-1 md:w-[200px]">
+										<motion.p layout className="text-sm text-gray1">
+											{comment.name}
+										</motion.p>
+										<motion.p layout className="text-sm text-gray-400">
+											{parsed}
+										</motion.p>
+									</motion.div>
+									<div className="mt-4 lg:mt-0 flex items-start justify-between rounded-lg bg-white2 p-4 px-8 shadow-sm w-full">
+										<motion.p>{comment.comment}</motion.p>
+										{/* <button className="flex flex-row items-center gap-1 px-2 py-1 text-sm hover:bg-gray-200 rounded-md relative z-0 text-gray-600 font-mono">
 										<svg
 											xmlns="http://www.w3.org/2000/svg"
 											fill="none"
@@ -343,9 +328,9 @@ export default function ReviewCard({ review, i, username, category, showEdit, ge
 											/>
 										</svg>
 									</button> */}
-								</div>
-							</motion.div>
-						))}
+									</div>
+								</motion.div>
+							))}
 					</motion.div>
 				)}
 			</AnimatePresence>

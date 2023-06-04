@@ -54,7 +54,7 @@ export default function Main({ session }) {
 
 			let { error } = await supabase.from("profiles").upsert(updates);
 			if (error) throw error;
-			alert("Profile updated!");
+			showSuccess("Profile updated");
 		} catch (error) {
 			alert("Error updating the data!");
 			console.log(error);
@@ -75,7 +75,7 @@ export default function Main({ session }) {
 					</span>
 				</div>
 			);
-		} else if (loading === false && showSuccess === true) {
+		} else if (loading == false && showSuccess == true) {
 			return (
 				<svg
 					xmlns="http://www.w3.org/2000/svg"

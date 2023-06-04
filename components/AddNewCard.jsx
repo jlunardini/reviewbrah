@@ -71,6 +71,11 @@ export default function AddNewCard({ getFeed }) {
 			setReview(null);
 			setScore(0.0);
 			setFile(null);
+			setCategory(null);
+			setShowError({
+				show: false,
+				message: null,
+			});
 			getFeed();
 		} catch (error) {
 			alert("Error updating the data!");
@@ -129,7 +134,7 @@ export default function AddNewCard({ getFeed }) {
 								showError.show && showError.fields.name ? "border-red-500" : "border-gray-200"
 							} border  rounded-md px-4 py-2 transition-colors`}
 							value={name || ""}
-							onChange={(e) => setName(e.target.value.trim())}
+							onChange={(e) => setName(e.target.value)}
 							placeholder="What are you reviewing?"
 						/>
 						<textarea

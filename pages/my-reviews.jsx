@@ -6,6 +6,7 @@ import AddNewCard from "../components/AddNewCard";
 import { useState, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { useRouter } from "next/router";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function MyReview({}) {
 	const session = useSession();
@@ -26,7 +27,7 @@ export default function MyReview({}) {
 			setLoading(true);
 			let { data, error, status } = await supabase
 				.from("reviews")
-				.select(`id, name, review, user_id(username), score, image, category, created_at`)
+				.select(`id, name, review, user_id(username, id), score, image, category, created_at`)
 				.eq("user_id", session.user.id)
 				.order("created_at", { ascending: false });
 			if (error && status !== 406) {
@@ -50,19 +51,21 @@ export default function MyReview({}) {
 				<div className="mb-8 text-left">
 					<p className="text-2xl text-gray1 ">Your recent reviews:</p>
 				</div>
-				<div className="grid grid-cols-6 gap-16 lg:gap-12 w-full">
-					{feed &&
-						feed.map((item) => (
-							<ReviewCard
-								key={item.id}
-								review={item}
-								username={false}
-								category={true}
-								showEdit={true}
-								getFeed={getFeed}
-							/>
-						))}
-				</div>
+				<motion.div layout className="grid grid-cols-6 gap-16 lg:gap-12 w-full">
+					<AnimatePresence>
+						{feed &&
+							feed.map((item) => (
+								<ReviewCard
+									key={item.id}
+									review={item}
+									username={false}
+									category={true}
+									showEdit={true}
+									getFeed={getFeed}
+								/>
+							))}
+					</AnimatePresence>
+				</motion.div>
 			</div>
 		</Primary>
 	);
