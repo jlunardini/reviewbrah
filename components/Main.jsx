@@ -153,7 +153,7 @@ export default function Main({ session }) {
 				</Card>
 				<div className="mt-8 w-full lg:mt-12 text-center flex flex-col">
 					<Link className="mt-8 w-full lg:mt-16 text-center hover:underline" href="/changelog">
-						See what's new
+						See what&apos;s new
 					</Link>
 					<Link
 						className="flex flex-row items-center justify-center gap-1 mt-4 w-full text-center hover:underline"
