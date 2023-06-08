@@ -4,6 +4,7 @@ import Primary from "../layouts/Primary";
 import { useRouter } from "next/router";
 import Card from "../components/Card";
 import Link from "next/link";
+import RecentLikes from "../components/RecentLikes";
 
 export default function Main({ session }) {
 	const supabase = useSupabaseClient();
@@ -115,6 +116,9 @@ export default function Main({ session }) {
 						<p className="text-sm text-gray1 mb-2">Member Since: 2023</p>
 						<p className="text-sm text-gray1">Total Reviews: 10</p>
 					</div>
+				</div>
+				<div className="mb-8">
+					<RecentLikes user={user} supabase={supabase} />
 				</div>
 				<Card>
 					<div className="flex flex-col mb-6">

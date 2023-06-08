@@ -35,7 +35,6 @@ export default function MyReview({}) {
 			}
 			if (data) {
 				setFeed(data);
-				console.log(data);
 			}
 		} catch (error) {
 			console.log(error);
