@@ -238,7 +238,7 @@ export default function ReviewCard({ review, i, username, category, showEdit, ge
             showComments={showComments}
           />
           <RankingRow review={review} />
-          <BookmarkRow review={review} />
+
           {showEdit && (
             <DeleteRow review={review} session={session} supabase={supabase} getFeed={getFeed} />
           )}
@@ -259,7 +259,7 @@ export default function ReviewCard({ review, i, username, category, showEdit, ge
             layout
           >
             {!showEdit && (
-              <motion.div layout className="mt-12 flex flex-col w-full">
+              <motion.div layout className="mt-12 flex flex-col w-full mb-8">
                 <p className="text-sm text-gray1 mb-2 font-semibold">Add a comment</p>
                 <motion.div layout="size" className="flex flex-row gap-2">
                   <motion.textarea
@@ -312,7 +312,7 @@ export default function ReviewCard({ review, i, username, category, showEdit, ge
                     layout
                     className="w-full"
                   >
-                    <motion.div className="mt-12 mb-8 flex flex-col md:flex-row w-full items-start md:items-center">
+                    <motion.div className="mb-8 flex flex-col md:flex-row w-full items-start md:items-center">
                       <motion.div layout className="flex flex-col md:mr-8 gap-1 md:w-[200px]">
                         <motion.p layout className="text-sm text-gray1">
                           {comment.user_id.username}
