@@ -3,6 +3,7 @@ import { useUser, useSupabaseClient } from "@supabase/auth-helpers-react";
 import Primary from "../layouts/Primary";
 import { useRouter } from "next/router";
 import Card from "../components/Card";
+import Link from "next/link";
 
 export default function Main({ session }) {
 	const supabase = useSupabaseClient();
@@ -151,10 +152,10 @@ export default function Main({ session }) {
 					</div>
 				</Card>
 				<div className="mt-8 w-full lg:mt-12 text-center flex flex-col">
-					<a className="mt-8 w-full lg:mt-16 text-center hover:underline" href="/changelog">
+					<Link className="mt-8 w-full lg:mt-16 text-center hover:underline" href="/changelog">
 						See what's new
-					</a>
-					<a
+					</Link>
+					<Link
 						className="flex flex-row items-center justify-center gap-1 mt-4 w-full text-center hover:underline"
 						target="_blank"
 						href="https://reviewbrah.canny.io/feature-requests"
@@ -174,8 +175,8 @@ export default function Main({ session }) {
 								d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"
 							/>
 						</svg>
-					</a>
-					<a
+					</Link>
+					<Link
 						className="flex flex-row items-center justify-center gap-1 mt-4 w-full text-center hover:underline"
 						href="mailto:jlunardini@hey.com"
 					>
@@ -183,7 +184,7 @@ export default function Main({ session }) {
 							Submit a bug report.<br></br>
 							<small>Please be gentle, the programmer scares easily.</small>
 						</span>
-					</a>
+					</Link>
 				</div>
 			</Primary>
 		);
