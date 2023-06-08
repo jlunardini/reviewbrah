@@ -44,7 +44,7 @@ export default function TheFeed({}) {
 				<div className="mb-8 text-left">
 					<p className="text-2xl text-gray1">All Recent Reviews:</p>
 				</div>
-				<motion.div className="grid grid-cols-6 gap-6 lg:gap-24 w-full">
+				<motion.div className="grid grid-cols-6 gap-12 lg:gap-24 w-full">
 					{feed &&
 						feed.map((item, i) => (
 							<ReviewCard

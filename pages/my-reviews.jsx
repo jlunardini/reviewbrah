@@ -56,7 +56,6 @@ export default function MyReview({}) {
 						{feed &&
 							feed.map((item) => (
 								<ReviewCard
-									key={item.id}
 									review={item}
 									username={false}
 									category={true}

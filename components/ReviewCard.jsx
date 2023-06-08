@@ -15,7 +15,8 @@ export default function ReviewCard({ review, i, username, category, showEdit, ge
 	const [confirmDelete, setConfirmDelete] = useState(false);
 	const [showComments, setShowComments] = useState(false);
 	const [newComment, setNewComment] = useState("");
-	const [comments, setComments] = useState([]);
+	const [comments, setComments] = useState();
+	const [confirmCommentDelete, setConfirmCommentDelete] = useState(false);
 
 	async function deleteReview() {
 		const remove = await supabase.from("reviews").delete().eq("id", review.id);
@@ -26,19 +27,18 @@ export default function ReviewCard({ review, i, username, category, showEdit, ge
 		try {
 			let { data, error, status } = await supabase
 				.from("comments")
-				.select(`*, user_id(username)`)
+				.select(`*, user_id(username, id)`)
 				.eq("review_id", review.id)
-				.single();
+				.order("created_at", { ascending: false });
 			if (error && status !== 406) {
 				throw error;
 			}
 			if (data) {
-				console.log([data]);
-				setComments([data]);
+				console.log(data);
+				setComments(data);
 			}
 		} catch (error) {
 			alert("Error loading comments");
-			console.log(error);
 		} finally {
 		}
 	}
@@ -55,7 +55,15 @@ export default function ReviewCard({ review, i, username, category, showEdit, ge
 		} catch (error) {
 			console.log(error);
 		} finally {
+			setNewComment("");
+			getComments();
 		}
+	}
+
+	async function deleteComment(commentID) {
+		const remove = await supabase.from("comments").delete().eq("id", commentID);
+		getComments();
+		setConfirmCommentDelete(false);
 	}
 
 	useEffect(() => {
@@ -78,12 +86,9 @@ export default function ReviewCard({ review, i, username, category, showEdit, ge
 			animate={{
 				opacity: 1,
 				height: "auto",
-				transition: {
-					delay: 0.2 * i,
-				},
 			}}
 			exit={{ opacity: 0, height: 0, transitionEnd: { display: "none" } }}
-			key="feed-container"
+			key={review.id}
 			layout="size"
 			className="flex flex-col col-span-6 "
 		>
@@ -101,7 +106,7 @@ export default function ReviewCard({ review, i, username, category, showEdit, ge
 					<div className="flex flex-col flex-grow h-full justify-center">
 						<p className="text-sm text-gray-400 mb-6">{parsed}</p>
 						<h2 className="font-semibold text-xl font-sans mb-4">{review.name}</h2>
-						<p className="mb-2 text-gray-600 lg:max-w-xs">{review.review}</p>
+						<p className="mb-2 text-gray-600">{review.review}</p>
 						<div className="flex flex-row items-center gap-2 mt-4">
 							{review.score < 0 ? (
 								<>
@@ -180,7 +185,10 @@ export default function ReviewCard({ review, i, username, category, showEdit, ge
 					</div>
 				</div>
 			</motion.div>
-			<motion.div layout="size" className="flex flex-row items-center justify-between mt-6">
+			<motion.div
+				layout="size"
+				className="flex flex-col md:flex-row gap-4 md:gap-0 items-center justify-between mt-8 md:mt-6"
+			>
 				<div className="flex flex-row-reverse items-center gap-2 lg:gap-4">
 					{category && review.category && review.category === "item" && (
 						<Link
@@ -227,7 +235,7 @@ export default function ReviewCard({ review, i, username, category, showEdit, ge
 						</Link>
 					)}
 				</div>
-				<div className="flex ml-4">
+				<div className="flex ml-4 gap-1">
 					<CommentRow
 						review={review}
 						setShowComments={setShowComments}
@@ -252,7 +260,7 @@ export default function ReviewCard({ review, i, username, category, showEdit, ge
 							ease: "easeInOut",
 						}}
 						className="flex flex-col items-center w-full"
-						layout="size"
+						layout
 					>
 						{!showEdit && (
 							<motion.div layout className="mt-12 flex flex-col w-full">
@@ -278,16 +286,15 @@ export default function ReviewCard({ review, i, username, category, showEdit, ge
 													type: "tween",
 													ease: "easeInOut",
 												}}
-												className="bg-white2 rounded-md hover:bg-gray-200 md:self-start"
+												className="bg-green-200 rounded-md text-sm hover:bg-green-300 text-left"
 											>
 												<motion.span
-													initial={{ opacity: 0 }}
-													animate={{ opacity: 1 }}
-													exit={{ opacity: 0 }}
-													key="comment-save-button-text"
-													className="px-8"
+													initial={{ opacity: 0, width: 0, height: "100%" }}
+													animate={{ opacity: 1, width: "auto", height: "100%" }}
+													exit={{ opacity: 0, width: 0, height: "100%" }}
+													className="px-4"
 												>
-													Save
+													Add
 												</motion.span>
 											</motion.button>
 										)}
@@ -295,42 +302,130 @@ export default function ReviewCard({ review, i, username, category, showEdit, ge
 								</motion.div>
 							</motion.div>
 						)}
-						{comments &&
-							comments.map((comment) => (
-								<motion.div
-									key={comment.id}
-									layout
-									className="mt-8 flex flex-col md:flex-row w-full items-start md:items-center"
-								>
-									<motion.div layout className="flex flex-col md:mr-8 gap-1 md:w-[200px]">
-										<motion.p layout className="text-sm text-gray1">
-											{comment.name}
-										</motion.p>
-										<motion.p layout className="text-sm text-gray-400">
-											{parsed}
-										</motion.p>
+						<AnimatePresence>
+							{comments &&
+								comments.map((comment) => (
+									<motion.div
+										initial={false}
+										animate={{
+											opacity: 1,
+											height: "auto",
+										}}
+										exit={{ opacity: 0, height: 0, transitionEnd: { display: "none" } }}
+										key={comment.id}
+										layout
+										className="w-full"
+									>
+										<motion.div className="mt-12 mb-8 flex flex-col md:flex-row w-full items-start md:items-center">
+											<motion.div layout className="flex flex-col md:mr-8 gap-1 md:w-[200px]">
+												<motion.p layout className="text-sm text-gray1">
+													{comment.user_id.username}
+												</motion.p>
+												<motion.p layout className="text-sm text-gray-400">
+													{parsed}
+												</motion.p>
+											</motion.div>
+											<motion.div className="mt-4 lg:mt-0 flex items-start justify-between rounded-lg bg-white2 p-4 px-8 shadow-sm w-full relative">
+												<motion.p>{comment.comment}</motion.p>
+												<AnimatePresence>
+													{comment.user_id.id === session.user.id && !confirmCommentDelete && (
+														<motion.button
+															layout
+															initial={false}
+															animate={{
+																opacity: 1,
+																transition: {
+																	delay: 0.5,
+																},
+															}}
+															exit={{
+																opacity: 0,
+																width: 0,
+															}}
+															key="confirm-delete-button"
+															transition={{
+																type: "tween",
+																ease: "easeInOut",
+															}}
+															onClick={() => setConfirmCommentDelete(!confirmCommentDelete)}
+														>
+															<motion.svg
+																xmlns="http://www.w3.org/2000/svg"
+																fill="none"
+																viewBox="0 0 24 24"
+																strokeWidth={1.5}
+																stroke="currentColor"
+																className="w-5 h-5 lg:w-5 lg:w-5 stroke-red-500"
+															>
+																<path
+																	strokeLinecap="round"
+																	strokeLinejoin="round"
+																	d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+																/>
+															</motion.svg>
+														</motion.button>
+													)}
+													{confirmCommentDelete && (
+														<motion.div
+															animate={{
+																opacity: 1,
+																transition: {
+																	delay: 0.5,
+																},
+															}}
+															exit={{
+																opacity: 0,
+															}}
+															key="yes-confirm-delete"
+															transition={{
+																type: "tween",
+																ease: "easeInOut",
+															}}
+															layout
+															className="flex flex-row items-center gap-2"
+														>
+															<motion.button onClick={() => deleteComment(comment.id)}>
+																<svg
+																	xmlns="http://www.w3.org/2000/svg"
+																	fill="none"
+																	viewBox="0 0 24 24"
+																	strokeWidth={1.5}
+																	stroke="currentColor"
+																	className="w-5 h-5 lg:w-5 lg:w-5 stroke-red-400"
+																>
+																	<path
+																		strokeLinecap="round"
+																		strokeLinejoin="round"
+																		d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+																	/>
+																</svg>
+															</motion.button>
+															<motion.button
+																onClick={() => setConfirmCommentDelete(!confirmCommentDelete)}
+															>
+																<motion.svg
+																	xmlns="http://www.w3.org/2000/svg"
+																	fill="none"
+																	viewBox="0 0 24 24"
+																	strokeWidth={1.5}
+																	stroke="currentColor"
+																	className="w-5 h-5 lg:w-5 lg:w-5 stroke-gray-400"
+																>
+																	<path
+																		strokeLinecap="round"
+																		strokeLinejoin="round"
+																		d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+																	/>
+																</motion.svg>
+															</motion.button>
+														</motion.div>
+													)}
+												</AnimatePresence>
+											</motion.div>
+										</motion.div>
 									</motion.div>
-									<div className="mt-4 lg:mt-0 flex items-start justify-between rounded-lg bg-white2 p-4 px-8 shadow-sm w-full">
-										<motion.p>{comment.comment}</motion.p>
-										{/* <button className="flex flex-row items-center gap-1 px-2 py-1 text-sm hover:bg-gray-200 rounded-md relative z-0 text-gray-600 font-mono">
-										<svg
-											xmlns="http://www.w3.org/2000/svg"
-											fill="none"
-											viewBox="0 0 24 24"
-											strokeWidth={1.5}
-											stroke="currentColor"
-											className="w-5 h-5 flex-shrink-0"
-										>
-											<path
-												strokeLinecap="round"
-												strokeLinejoin="round"
-												d="M6.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM12.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM18.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"
-											/>
-										</svg>
-									</button> */}
-									</div>
-								</motion.div>
-							))}
+								))}
+						</AnimatePresence>
 					</motion.div>
 				)}
 			</AnimatePresence>

@@ -140,7 +140,7 @@ export default function Main({ session }) {
 							onClick={() => updateProfile({ username })}
 							disabled={loading}
 						>
-							{renderButtonText()}
+							Update
 						</button>
 						<button
 							className="bg-red-400 hover:bg-red-500 text-white py-2 rounded-md  px-8 w-full"
@@ -150,6 +150,41 @@ export default function Main({ session }) {
 						</button>
 					</div>
 				</Card>
+				<div className="mt-8 w-full lg:mt-12 text-center flex flex-col">
+					<a className="mt-8 w-full lg:mt-16 text-center hover:underline" href="/changelog">
+						See what's new
+					</a>
+					<a
+						className="flex flex-row items-center justify-center gap-1 mt-4 w-full text-center hover:underline"
+						target="_blank"
+						href="https://reviewbrah.canny.io/feature-requests"
+					>
+						<span>Submit a feature request</span>
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							fill="none"
+							viewBox="0 0 24 24"
+							strokeWidth={1.5}
+							stroke="currentColor"
+							className="w-4 h-4"
+						>
+							<path
+								strokeLinecap="round"
+								strokeLinejoin="round"
+								d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"
+							/>
+						</svg>
+					</a>
+					<a
+						className="flex flex-row items-center justify-center gap-1 mt-4 w-full text-center hover:underline"
+						href="mailto:jlunardini@hey.com"
+					>
+						<span>
+							Submit a bug report.<br></br>
+							<small>Please be gentle, the programmer scares easily.</small>
+						</span>
+					</a>
+				</div>
 			</Primary>
 		);
 }

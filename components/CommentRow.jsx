@@ -4,16 +4,43 @@ import { useState, useEffect } from "react";
 export default function Comment({ review, showComments, setShowComments }) {
 	const session = useSession();
 	const supabase = useSupabaseClient();
+
 	const [loading, setLoading] = useState(false);
+	const [commentTotal, setCommentTotal] = useState(null);
+
+	useEffect(() => {
+		getCommentTotal();
+		return () => {};
+	}, [supabase]);
+
+	async function getCommentTotal() {
+		try {
+			setLoading(true);
+			let commentTotal = await supabase
+				.from("comments")
+				.select("*", { count: "exact" })
+				.eq("review_id", review.id);
+			if (commentTotal) {
+				setCommentTotal(commentTotal);
+			}
+		} catch (error) {
+			console.log(error);
+		} finally {
+			setLoading(false);
+		}
+	}
 
 	return (
 		<div className="flex flex-row items-center justify-between ">
 			<div className="flex flex-row items-center justify-end w-full gap-4">
 				<button
 					onClick={() => setShowComments(!showComments)}
-					className="flex flex-row items-center text-sm gap-1 px-2 py-1 hover:bg-gray-200 rounded-md relative z-0 text-gray-600 font-mono"
+					className={`flex flex-row items-center transition-all text-sm gap-1 px-2 py-1 hover:bg-gray-200 rounded-md relative z-0 text-gray-600 font-mono    ${
+						showComments ? "bg-gray-200" : ""
+					}`}
 				>
-					<span className="">1</span>
+					{commentTotal && <p>{commentTotal.count}</p>}
+
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
 						fill="none"
